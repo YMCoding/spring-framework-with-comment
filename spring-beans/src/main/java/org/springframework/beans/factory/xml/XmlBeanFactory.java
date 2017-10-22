@@ -52,6 +52,11 @@ import org.springframework.core.io.Resource;
  */
 @Deprecated
 @SuppressWarnings({"serial", "all"})
+// 对DefaultListableBeanFactory进行了扩展，
+// 主要是从xml文档中读取BeandDefination，
+// 对于注册及获取bena都是从父类DefaultListableBeanFactory继承的方法去实现
+// 增加了对XmlBeanDefinitionReader类型的reander
+// 使用reader属性对资源文件进行读取和注册
 public class XmlBeanFactory extends DefaultListableBeanFactory {
 
 	private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
@@ -75,7 +80,10 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 * @throws BeansException in case of loading or parsing errors
 	 */
 	public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {
+		// 调用父类
 		super(parentBeanFactory);
+		// 资源加载的真正实现
+		// 1.封装资源，对resouce使用EncodeResource进行封装
 		this.reader.loadBeanDefinitions(resource);
 	}
 

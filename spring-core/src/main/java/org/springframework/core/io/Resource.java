@@ -16,6 +16,8 @@
 
 package org.springframework.core.io;
 
+import org.springframework.lang.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +25,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-
-import org.springframework.lang.Nullable;
 
 /**
  * Interface for a resource descriptor that abstracts from the actual
@@ -49,6 +49,9 @@ import org.springframework.lang.Nullable;
  * @see ByteArrayResource
  * @see InputStreamResource
  */
+// java的url没有提供一些基本的方法用来检测资源是否存在，检查当前资源是否可读等方法
+// 所以spring自己封装了
+// 封装了url uri file等类型，还提供了存在 可读 是否处于打开状态
 public interface Resource extends InputStreamSource {
 
 	/**

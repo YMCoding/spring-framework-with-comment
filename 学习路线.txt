@@ -1,0 +1,26 @@
+1.core：主要包含spring框架基本的核心工具类
+
+2.beans：包含访问配置文件、创建和管理bean以及进行IOC和dc操作相关的类
+
+3.context：构建于core和beans模块基础之上，提供了一种类似JNDI注册器的框架式对象访问方法
+
+4.expression：提供了一个强大的表达式语言用于在运行时查询和操纵对象
+
+5.JDBC：提供了一个jdbc抽象层，可以相处冗长的jdbc编码和解析数据库厂商特有的错误代码
+
+6.orm：流行的对象-关系映射api，hibernate、mybatis
+
+7.oxm：提供了一个对object/xml映射实现的抽象模型 jaxb、xmlbeans
+
+8.jms：包含一些制造和消费信息的特性
+
+9.web：为基于web的应用提供了上下文
+
+10.aop：符合aop联盟标准的面向切面编程的实现
+
+11.test：用于测试
+
+
+
+学习过程：
+    1.bean加载 spring-beans项目

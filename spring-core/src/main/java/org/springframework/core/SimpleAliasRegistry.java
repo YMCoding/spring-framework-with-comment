@@ -16,15 +16,15 @@
 
 package org.springframework.core;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.util.StringValueResolver;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.util.StringValueResolver;
 
 /**
  * Simple implementation of the {@link AliasRegistry} interface.
@@ -35,6 +35,7 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @since 2.5.2
  */
+// 主要是利用aliasMap作为缓存，并对接口AliasRegistry进行实现
 public class SimpleAliasRegistry implements AliasRegistry {
 
 	/** Map from alias to canonical name */
@@ -55,11 +56,13 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					// An existing alias - no need to re-register
 					return;
 				}
+				// 不允许被覆盖则抛出异常
 				if (!allowAliasOverriding()) {
 					throw new IllegalStateException("Cannot register alias '" + alias + "' for name '" +
 							name + "': It is already registered for name '" + registeredName + "'.");
 				}
 			}
+			// 当a->b存在时候，再次出现a-c-b会出现异常
 			checkForAliasCircle(name, alias);
 			this.aliasMap.put(alias, name);
 		}

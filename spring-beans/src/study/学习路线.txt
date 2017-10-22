@@ -1,0 +1,13 @@
+1.bena注入层级关系
+
+AliasRegistry：定义简单增删改查
+    BeanDefinitionRegistry： 定义了对BeanDefinition的增删改查
+    SimpleAliasRegistry： 主要是利用aliasMap作为缓存，并对接口AliasRegistry进行实现
+SingletonBeanRegistry： 定义对单例的注册及获取
+
+BeanFactory：定义获取bean及bean的各种属性
+
+        DefaultListableBeanFactory
+            XmlBeanFactory
+                XmlBeanDefinitionReader
+
