@@ -11,3 +11,8 @@ BeanFactory：定义获取bean及bean的各种属性
             XmlBeanFactory
                 XmlBeanDefinitionReader
 
+
+
+AbstractBeanFactory doCreateBean 创建bean
+ClassPathXmlApplicationContext 包含BeanFactory所包含的一切功能
+

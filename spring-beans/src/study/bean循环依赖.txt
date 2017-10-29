@@ -1,0 +1,13 @@
+Spring容器将每一个正在创建的bean标识符放在一个  当前创建bean池中，bean标识符在创建过程中将一直保持在这个池中
+当创建bena过程中发现自己已经在当前创建bean池里面，则抛出BeanCurrentlyInCreationException标示循环依赖。
+对于创建完毕的bena则从当前创建bean池中清楚掉
+
+1.通过构造器循环依赖
+    无法解决，只能抛出BeanCurrentlyInCreationException异常标示循环依赖
+
+2.setter循环依赖
+    通过springr容器提前暴露刚完成构造器注入但未完成其他步骤的bean来完成的，而且只能解决单例作用域的bean循环依赖
+    通过提前暴露一个单例工厂方法，从而使其他的bean能引用到该bean
+
+3.prototype范围的依赖处理
+    无法完成依赖注入，以为spring容器不进行缓存prototype作用域的bean,因此无法提前暴露一个创建中的bean
