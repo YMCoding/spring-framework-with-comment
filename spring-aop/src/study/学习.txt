@@ -1,3 +1,5 @@
 aop入口
 AopNamespaceHandler
     AspectJAutoProxyBeanDefinitionParser
+
+CGLIB和Jdk代理 都实现了AopProxy getProxy()方法

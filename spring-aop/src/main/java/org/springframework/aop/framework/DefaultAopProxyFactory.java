@@ -16,10 +16,10 @@
 
 package org.springframework.aop.framework;
 
+import org.springframework.aop.SpringProxy;
+
 import java.io.Serializable;
 import java.lang.reflect.Proxy;
-
-import org.springframework.aop.SpringProxy;
 
 /**
  * Default {@link AopProxyFactory} implementation, creating either a CGLIB proxy
@@ -48,6 +48,12 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		// isOptimize: 用来控制通过CGLIB创建的代理是否使用激进的优化策略
+		// isProxyTargetClass: 属性为true,目标本身被代理而不是目标类的接口（也就CGLIB代理）
+		// hasNoUserSuppliedProxyInterfaces是否存在代理接口
+		// 想使用CGLIB实现aop,在spring配置文件中加入<aop:aspectj-autoproxy proxy-target-class="true">
+		// jdk动态代理只对实现了接口的类生成代理，而不是针对类
+		// CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法，建议该类和方法最好不要声明称final
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {

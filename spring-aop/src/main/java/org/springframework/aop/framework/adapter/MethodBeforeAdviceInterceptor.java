@@ -16,13 +16,12 @@
 
 package org.springframework.aop.framework.adapter;
 
-import java.io.Serializable;
-
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.util.Assert;
+
+import java.io.Serializable;
 
 /**
  * Interceptor to wrap am {@link org.springframework.aop.MethodBeforeAdvice}.
@@ -33,7 +32,7 @@ import org.springframework.util.Assert;
  */
 @SuppressWarnings("serial")
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Serializable {
-
+	// 代表前置增强的AspectJMethodBeforeAdvice
 	private MethodBeforeAdvice advice;
 
 
@@ -48,6 +47,7 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
+		// 跟踪before方法
 		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis() );
 		return mi.proceed();
 	}
