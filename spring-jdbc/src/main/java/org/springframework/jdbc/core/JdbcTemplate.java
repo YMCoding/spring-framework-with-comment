@@ -422,6 +422,7 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 				ResultSet rs = null;
 				try {
 					rs = stmt.executeQuery(sql);
+					// 负责将结果进行封装转换到pojo
 					return rse.extractData(rs);
 				} finally {
 					JdbcUtils.closeResultSet(rs);
@@ -594,6 +595,7 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 			applyStatementSettings(ps);
 			// 调用回到函数
 			T result = action.doInPreparedStatement(ps);
+			// 警告处理
 			handleWarnings(ps);
 			return result;
 		} catch (SQLException ex) {
@@ -614,6 +616,7 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 				((ParameterDisposer) psc).cleanupParameters();
 			}
 			JdbcUtils.closeStatement(ps);
+			// 释放连接
 			DataSourceUtils.releaseConnection(con, getDataSource());
 		}
 	}
@@ -1300,6 +1303,8 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 	protected void applyStatementSettings(Statement stmt) throws SQLException {
 		int fetchSize = getFetchSize();
 		if (fetchSize != -1) {
+			// 当调用rs.next方法时候，会一次性从服务器上面取多少行数据回来
+			// 下次再rs.next时候 直接从内存中获取数据而不需要交互
 			stmt.setFetchSize(fetchSize);
 		}
 		int maxRows = getMaxRows();
@@ -1343,7 +1348,9 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations {
 	 * @see org.springframework.jdbc.SQLWarningException
 	 */
 	protected void handleWarnings(Statement stmt) throws SQLException {
+		// 设置忽略警告时候，只尝试打印日志
 		if (isIgnoreWarnings()) {
+			// 如果日志开启的情况下打印日志
 			if (logger.isDebugEnabled()) {
 				SQLWarning warningToLog = stmt.getWarnings();
 				while (warningToLog != null) {

@@ -331,6 +331,8 @@ public abstract class DataSourceUtils {
 			return;
 		}
 		if (dataSource != null) {
+			// 当前线程存在事务的情况下，说明存在共用数据库连接
+			// 直接使用ConnectionHolder中的released方法进行连接数减一而不真正的释放连接
 			ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 			if (conHolder != null && connectionEquals(conHolder, con)) {
 				// It's the transactional Connection: Don't close it.
