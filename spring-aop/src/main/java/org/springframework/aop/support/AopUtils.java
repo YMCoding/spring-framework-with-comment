@@ -223,6 +223,9 @@ public abstract class AopUtils {
 	 *                         for this bean includes any introductions
 	 * @return whether the pointcut can apply on any method
 	 */
+	// 获取对应类的所有接口并连同类本身一起遍历
+	// 遍历过成功连类中的方法也遍历
+	// 匹配成功则认为这个类适用于当前增强器
 	public static boolean canApply(Pointcut pc, Class<?> targetClass, boolean hasIntroductions) {
 		Assert.notNull(pc, "Pointcut must not be null");
 		if (!pc.getClassFilter().matches(targetClass)) {

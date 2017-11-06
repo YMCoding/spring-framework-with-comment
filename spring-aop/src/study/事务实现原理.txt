@@ -1,0 +1,41 @@
+1.入口
+    TxNamespaceHandler registerBeanDefinitionParser方法
+2.解析标签（<tx:annotation-driven为开头的配置）
+    AnnotationDrivenBeanDefinitionParser parse方法
+3.默认配置解析
+    AopAutoProxyConfigurer
+        configureAutoProxyCreator方法
+            注册了三个bean
+            AopNamespaceUtils.registerAutoProxyCreatorIfNecessary
+                AopConfigUtils.registerAutoProxyCreatorIfNecessary
+                    InfrastructureAdvisorAutoProxyCreator
+                        间接实现了SmartInstantiationAwareBeanPostProcessor
+                            SmartInstantiationAwareBeanPostProcessor又继承 InstantiationAwareBeanPostProcessor
+
+                            在spring的所有bean实例化，都会保证调用其 postProcessAfterInstantiation方法
+
+                            AbstractAutoProxyCreator实现了postProcessAfterInstantiation
+                                其中wrapIfNecessary
+                                    找出对应bena的增强器
+                                    根据找出的增强器创建代理
+                                    通过getAdvicesAndAdvisorsForBean 方法
+                                        AbstractAdvisorAutoProxyCreator 实现了getAdvicesAndAdvisorsForBean
+                                            调用了findEligibleAdvisors
+                                                findCandidateAdvisors 获取方法增强器
+                                                findAdvisorsThatCanApply 选取合适的增强器
+                                                    AopUtils canApply  methodMatcher.matches方法
+                                                        最终调用TransactionAttributeSourcePointcut matches方法
+                                                            AbstractFallbackTransactionAttributeSource 的getTransactionAttribute方法
+                                                                调用computeTransactionAttribute
+                                                                    findTransactionAttribute方法检查是否声明事务
+                                                                        AnnotationTransactionAttributeSource  findTransactionAttribute方法
+                                                                            SpringTransactionAnnotationParser parseTransactionAnnotation
+                                                                                parseTransactionAnnotation
+
+
+当判断某个bean适用于事务增强时，也就是适用于增强器BeanFactoryTransactionAttributeSourceAdvisor
+BeanFactoryTransactionAttributeSourceAdvisor作为Advisor的实现类，当代理被调用时会调用 这个类的增强方法， 也就是此bena的advise
+在解析事务标签时，我们把TransactionIntercepter类型的bean注入到了BeanFactoryTransactionAttributeSourceAdvisor中
+
+所以调用事务增强器的代理类时候会首先执行TransactionInterceptor进行增强
+在TransactionInterceptor的invoke方法中完成整个事务的逻辑
